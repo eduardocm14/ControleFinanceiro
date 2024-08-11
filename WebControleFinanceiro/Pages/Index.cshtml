@@ -1,0 +1,256 @@
+﻿@page
+@model WebAppControleFinanceiro.Pages.IndexModel
+@{
+    ViewData["Title"] = "";
+}
+
+<h5>Controle Financeiro</h5>
+
+<div class="card mb-4">
+    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+        <div>
+            <i class="fas fa-filter"></i> Filtro de Contas
+        </div>
+        <button class="btn btn-light" type="button" id="toggleFilterBtn">
+            <i class="fas fa-filter"></i> Mostrar Filtros
+        </button>
+    </div>
+    <div class="card-body" id="filterForm" style="display: none;">
+        <!-- Formulário de Filtro -->
+        <form method="get" action="@Url.Page("Index")" class="p-3">
+            <div class="row">
+                <!-- Filtro de Datas -->
+                <div class="form-group col-md-3 mb-2">
+                    <label for="dateFilter" class="text-info">Filtro de Datas</label>
+                    <select id="dateFilter" name="DateFilter" class="form-control border-info">
+                        <option value="">Selecione</option>
+                        <option value="Last7Days">Últimos 7 dias</option>
+                        <option value="Last15Days">Últimos 15 dias</option>
+                        <option value="Last20Days">Últimos 20 dias</option>
+                        <option value="ThisMonth">Este mês</option>
+                    </select>
+                </div>
+                <!-- Tipo de Filtro -->
+                <div class="form-group col-md-3 mb-2">
+                    <label for="filterType" class="text-info">Tipo de Filtro</label>
+                    <select id="filterType" name="FilterType" class="form-control border-info">
+                        <option value="">Selecione</option>
+                        <option value="Vencimento">Vencimento</option>
+                        <option value="Pagamento">Pagamento</option>
+                    </select>
+                </div>
+                <!-- Data de Início -->
+                <div class="form-group col-md-3 mb-2">
+                    <label for="startDate" class="text-info">Data de Início</label>
+                    <input type="date" id="startDate" name="StartDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" class="form-control border-info" />
+                </div>
+                <!-- Data de Fim -->
+                <div class="form-group col-md-3 mb-2">
+                    <label for="endDate" class="text-info">Data de Fim</label>
+                    <input type="date" id="endDate" name="EndDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" class="form-control border-info" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success w-100" title="Clique para filtrar as contas com base nas datas selecionadas">
+                <i class="fas fa-search"></i> Filtrar
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Tabela de Listagem -->
+<div class="card">
+    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+        <div>
+            <i class="fas fa-list"></i> Lista de Contas
+        </div>
+        <div>
+            <span>Total de Registros: @Model.Contas.Count()</span>
+            <span class="ml-3">Valor Total: @Model.Contas.Sum(c => c.Valor).ToString("C")</span>
+            <span class="ml-3">Valor Total Pago: @Model.Contas.Where(c => c.Pago).Sum(c => c.Valor).ToString("C")</span>
+        </div>
+        <button type="button" class="btn btn-primary" title="Incluir Conta" data-toggle="modal" data-target="#createAccountModal">
+            <i class="fas fa-plus-circle"></i>
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-center">Código</th>
+                        <th>Nome</th>
+                        <th class="text-center">Valor</th>
+                        <th class="text-center">Data Vencimento</th>
+                        <th class="text-center">Data Pagamento</th>
+                        <th class="text-center">Pago</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var conta in Model.Contas)
+                    {
+                        <tr>
+                            <td class="text-center">@conta.Id</td>
+                            <td>@conta.Nome</td>
+                            <td class="text-center">@conta.Valor.ToString("C")</td>
+                            <td class="text-center">@conta.DataVencimento.ToShortDateString()</td>
+                            <td class="text-center">@(conta.DataPagamento.HasValue ? conta.DataPagamento.Value.ToShortDateString() : "X")</td>
+                            <td class="text-center">
+                                @if (conta.Pago)
+                                {
+                                    <span class="badge badge-success">Sim</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger">Não</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (!conta.Pago)
+                                {
+                                    <a asp-page="./Edit" asp-route-id="@conta.Id" class="btn btn-warning btn-sm" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-danger btn-sm ml-2" title="Excluir"
+                                       data-toggle="modal" data-target="#deleteModal"
+                                       data-url="@Url.Page("Delete", new { id = conta.Id })"
+                                       data-id="@conta.Id" data-name="@conta.Nome">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-primary btn-sm ml-2" title="Pagamento" data-toggle="modal" data-target="#payModal" data-id="@conta.Id" data-name="@conta.Nome">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-lock" title="Conta Paga não pode ser alterada"></i>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Contas.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center">Nenhuma conta encontrada</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Pagamento -->
+<div class="modal fade" id="payModal" tabindex="-1" role="dialog" aria-labelledby="payModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="payModalLabel">Confirmar Pagamento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Você deseja marcar a conta <strong id="modalAccountName"></strong> como paga?</p>
+                <div class="form-group">
+                    <label for="paymentDate">Escolha a Data de Pagamento:</label>
+                    <select id="paymentDate" class="form-control">
+                        <option value="today" data-date="@DateTime.Now.ToString("yyyy-MM-dd")">Data Corrente (@DateTime.Now.ToString("dd/MM/yyyy"))</option>
+                        <option value="custom">Data Personalizada</option>
+                    </select>
+                    <input type="date" id="customDate" class="form-control mt-2" style="display: none;" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="confirmPayBtn" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Deseja excluir a conta <strong id="modalAccountName"></strong> (Código: <span id="modalAccountCode"></span>)? Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="post">
+                    <input type="hidden" id="deleteAccountId" name="id" />
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rodapé -->
+<footer class="bg-dark text-white mt-4 py-2">
+    <div class="container text-center">
+        <p class="mb-0" style="font-size: 0.85rem;">
+            Desenvolvedor: Eduardo Moraes - Data de Build: @DateTime.Now.ToString("dd/MM/yyyy")
+        </p>
+    </div>
+</footer>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Adicionando Bootstrap e FontAwesome -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+    <!-- Adicionando o JavaScript do Bootstrap e Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botão que abriu o modal
+            var accountId = button.data('id'); // Extraindo dados do atributo
+            var accountName = button.data('name');
+            var accountCode = button.data('code');
+
+            var modal = $(this);
+            modal.find('#modalAccountName').text(accountName);
+            modal.find('#modalAccountCode').text(accountCode);
+            modal.find('#deleteAccountId').val(accountId);
+
+            // Defina a ação do formulário com o URL apropriado
+            var form = modal.find('#deleteForm');
+            form.attr('action', '@Url.Page("Index", "Delete")'); // Ajuste conforme a URL da ação
+        });
+    </script>
+
+    <!-- Alternar a visibilidade do formulário de filtro -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Seleciona o botão e o formulário de filtro
+            var toggleButton = document.getElementById('toggleFilterBtn');
+            var filterForm = document.getElementById('filterForm');
+
+            // Adiciona um ouvinte de evento de clique ao botão
+            toggleButton.addEventListener('click', function () {
+                if (filterForm.style.display === 'none' || filterForm.style.display === '') {
+                    // Mostra o formulário de filtro
+                    filterForm.style.display = 'block';
+                    toggleButton.innerHTML = '<i class="fas fa-filter"></i> Ocultar Filtros';
+                } else {
+                    // Oculta o formulário de filtro
+                    filterForm.style.display = 'none';
+                    toggleButton.innerHTML = '<i class="fas fa-filter"></i> Mostrar Filtros';
+                }
+            });
+        });
+    </script>
+
+}
