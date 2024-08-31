@@ -33,10 +33,24 @@ namespace WebAPIControleFinanceiroCore.Controllers
         [HttpPost]
         public async Task<ActionResult<Conta>> PostConta(Conta conta)
         {
-            _context.Contas.Add(conta);
-            await _context.SaveChangesAsync();
+            if (conta.DataVencimento.Kind == DateTimeKind.Unspecified)
+            {
+                // Ajustar o DateTime para UTC, se necessário
+                conta.DataVencimento = DateTime.SpecifyKind(conta.DataVencimento, DateTimeKind.Utc);
+            }
 
-            return CreatedAtAction(nameof(GetConta), new { id = conta.Id }, conta);
+            try
+            {
+                _context.Contas.Add(conta);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetConta), new { id = conta.Id }, conta);
+            }
+            catch (Exception ex)
+            {
+                // Log e manipular o erro adequadamente
+                return BadRequest(new { message = "Erro ao salvar a conta.", error = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]

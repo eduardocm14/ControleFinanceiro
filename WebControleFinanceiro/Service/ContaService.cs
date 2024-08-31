@@ -22,7 +22,7 @@ namespace WebAppControleFinanceiro.Services
             // Garantir que contas não seja null
             if (contas == null)
             {
-                return new List<Conta>();
+                return [];
             }
 
             // Filtrar contas por intervalo de datas, se fornecido
@@ -42,6 +42,12 @@ namespace WebAppControleFinanceiro.Services
             var response = await _httpClient.DeleteAsync($"http://localhost:5235/api/Conta/{id}");
 
             // Retornar true se a operação for bem-sucedida, false caso contrário
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> AddContaAsync(Conta novaConta)
+        {
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5235/api/Conta", novaConta);
             return response.IsSuccessStatusCode;
         }
     }

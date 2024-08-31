@@ -1,16 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net.Http;
+using System.Globalization;
 using WebAppControleFinanceiro.Services;
 using WebControleFinanceiro.Model;
 
 namespace WebAppControleFinanceiro.Pages
 {
-    public class IndexModel(ContaService contaService) : PageModel
+    public class IndexModel : PageModel
     {
-        private readonly ContaService _contaService = contaService;
+        private readonly ContaService _contaService;
 
-        public IEnumerable<Conta> Contas { get; set; }
+        public IndexModel(ContaService contaService)
+        {
+            _contaService = contaService;
+        }
+
+        public IEnumerable<Conta> Contas { get; set; } = [];
 
         [BindProperty(SupportsGet = true)]
         public DateTime? StartDate { get; set; }
@@ -22,18 +27,16 @@ namespace WebAppControleFinanceiro.Pages
         public Conta Conta { get; set; } // Modelo da conta
 
         [BindProperty(SupportsGet = true)]
-        public string DateFilter { get; set; }
+        public string? DateFilter { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public string FilterType { get; set; }
+        //[BindProperty(SupportsGet = true)]
+        //public string FilterType { get; set; }
 
         public async Task OnGetAsync()
         {
             DateTime defaultStartDate = new(DateTime.Now.Year, DateTime.Now.Month, 1);
             DateTime defaultEndDate = new(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
 
-            var dateFilter = Request.Query["DateFilter"];
-            var filterType = Request.Query["FilterType"];
             var startDateString = Request.Query["StartDate"];
             var endDateString = Request.Query["EndDate"];
 
@@ -58,14 +61,13 @@ namespace WebAppControleFinanceiro.Pages
                     endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
                     break;
                 default:
-               
-                 break;
+                    break;
             }
 
             StartDate = startDate;
             EndDate = endDate;
 
-            Contas = await _contaService.GetContasAsync(StartDate, EndDate) ?? new List<Conta>(); ;
+            Contas = await _contaService.GetContasAsync(StartDate, EndDate) ?? [];
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)
@@ -81,6 +83,38 @@ namespace WebAppControleFinanceiro.Pages
 
             // Caso a exclusão não tenha sido bem-sucedida, exibir uma mensagem ou tomar alguma ação
             ModelState.AddModelError(string.Empty, "Não foi possível excluir a conta.");
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAddAsync()
+        {
+            DateTime StartDate = new(DateTime.Now.Year, DateTime.Now.Month, 1);
+            DateTime EndDate = new(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
+            // Defina Pago como false
+            Conta.Pago = false;
+
+            if (!ModelState.IsValid)
+            {
+                // Log ou breakpoint aqui para inspecionar ModelState
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+
+                return Page();
+            }
+
+            var success = await _contaService.AddContaAsync(Conta);
+
+            if (success)
+            {
+                // Recarregar a lista de contas após adicionar a nova conta
+                Contas = await _contaService.GetContasAsync(StartDate, EndDate);
+                return RedirectToPage(); // Redirecionar para atualizar a página
+            }
+
+            // Caso a adição não tenha sido bem-sucedida, exibir uma mensagem ou tomar alguma ação
+            ModelState.AddModelError(string.Empty, "Não foi possível adicionar a conta.");
             return Page();
         }
     }

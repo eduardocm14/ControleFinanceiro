@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 using WebAppControleFinanceiro.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,15 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpClient<ContaService>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:5235/api/"); // Defina a base address apropriada
+});
+
+// Configurações de cultura
+var supportedCultures = new[] { new CultureInfo("pt-BR") };
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture("pt-BR");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
 });
 
 var app = builder.Build();

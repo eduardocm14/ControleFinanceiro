@@ -193,6 +193,43 @@
     </div>
 </div>
 
+<!-- Modal de Criação de Conta -->
+<div class="modal fade" id="createAccountModal" tabindex="-1" role="dialog" aria-labelledby="createAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createAccountModalLabel">Nova Conta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createAccountForm" method="post" asp-page-handler="Add">
+                    <div class="form-group">
+                        <label for="Nome">Nome</label>
+                        <input type="text" id="Nome" name="Conta.Nome" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="valor">Valor</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="text" id="valor" name="Conta.Valor" class="form-control" required
+                                   pattern="^\d+([.,]\d{1,2})?$" title="Número com até duas casas decimais" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="DataVencimento">Data de Vencimento</label>
+                        <input type="date" id="DataVencimento" name="Conta.DataVencimento" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Adicionar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Rodapé -->
 <footer class="bg-dark text-white mt-4 py-2">
     <div class="container text-center">
@@ -213,6 +250,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Opção para deletar conta -->
     <script>
         $('#deleteModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Botão que abriu o modal
@@ -228,6 +267,17 @@
             // Defina a ação do formulário com o URL apropriado
             var form = modal.find('#deleteForm');
             form.attr('action', '@Url.Page("Index", "Delete")'); // Ajuste conforme a URL da ação
+        });
+    </script>
+
+    <!-- Preenche Data de Vencimento com data corrente - Form Nova Conta -->
+    <script>
+        // Adiciona um listener para o evento de abertura do modal
+        $('#createAccountModal').on('shown.bs.modal', function () {
+            // Obtem a data atual
+            const today = new Date().toISOString().split('T')[0];
+            // Define o valor do campo como a data atual
+            document.getElementById('DataVencimento').value = today;
         });
     </script>
 
@@ -309,6 +359,15 @@
                 var day = String(date.getDate()).padStart(2, '0');
                 return `${year}-${month}-${day}`;
             }
+        });
+    </script>
+
+    <!-- Limpar Form Nova Conta ao fechar -->
+    <script>
+        // Quando o modal for fechado
+        $('#createAccountModal').on('hidden.bs.modal', function () {
+            // Limpa os campos do formulário
+            $('#createAccountForm')[0].reset();
         });
     </script>
 

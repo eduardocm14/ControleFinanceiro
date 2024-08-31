@@ -3,8 +3,10 @@ using WebAPIControleFinanceiroCore.Model;
 
 namespace WebAPIControleFinanceiroCore.Data
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+    public class AppDbContext : DbContext
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
         public DbSet<Conta> Contas { get; set; }
     }
 }

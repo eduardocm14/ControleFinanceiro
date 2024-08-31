@@ -72,7 +72,6 @@
             Controls.Add(lblStatus);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            MinimizeBox = false;
             Name = "FromPrincipal";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Start/Stop API .NET Core";
