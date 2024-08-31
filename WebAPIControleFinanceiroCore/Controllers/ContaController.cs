@@ -53,15 +53,26 @@ namespace WebAPIControleFinanceiroCore.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutConta(int id, Conta conta)
+        [HttpPost("edit")]
+        public async Task<IActionResult> EditConta([FromBody] Conta conta)
         {
-            if (id != conta.Id)
+            if (conta == null || conta.Id <= 0)
             {
                 return BadRequest();
             }
 
-            _context.Entry(conta).State = EntityState.Modified;
+            var existingConta = await _context.Contas.FindAsync(conta.Id);
+            if (existingConta == null)
+            {
+                return NotFound();
+            }
+
+            // Atualize as propriedades da conta existente
+            existingConta.Nome = conta.Nome;
+            existingConta.Valor = conta.Valor;
+            existingConta.DataVencimento = conta.DataVencimento;
+
+            _context.Entry(existingConta).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +80,7 @@ namespace WebAPIControleFinanceiroCore.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ContaExists(id))
+                if (!ContaExists(conta.Id))
                 {
                     return NotFound();
                 }
@@ -83,7 +94,7 @@ namespace WebAPIControleFinanceiroCore.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        public async Task<IActionResult> DeleteConta(int id)
         {
             var product = await _context.Contas.FindAsync(id);
             if (product == null)
