@@ -70,7 +70,7 @@ namespace WebAPIControleFinanceiroCore.Controllers
             // Atualize as propriedades da conta existente
             existingConta.Nome = conta.Nome;
             existingConta.Valor = conta.Valor;
-            existingConta.DataVencimento = conta.DataVencimento;
+            existingConta.DataVencimento = conta.DataVencimento.ToUniversalTime(); // Converta para UTC
 
             _context.Entry(existingConta).State = EntityState.Modified;
 
@@ -92,6 +92,7 @@ namespace WebAPIControleFinanceiroCore.Controllers
 
             return NoContent();
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteConta(int id)

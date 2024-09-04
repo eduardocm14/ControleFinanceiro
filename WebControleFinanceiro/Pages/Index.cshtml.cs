@@ -117,5 +117,28 @@ namespace WebAppControleFinanceiro.Pages
             ModelState.AddModelError(string.Empty, "Não foi possível adicionar a conta.");
             return Page();
         }
+
+        public async Task<IActionResult> OnPostEditAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                // Retorna à página se o modelo estiver inválido
+                return Page();
+            }
+
+            // Chama o serviço para editar a conta
+            var success = await _contaService.EditContaAsync(Conta);
+
+            if (success)
+            {
+                // Recarrega a lista de contas após a edição
+                Contas = await _contaService.GetContasAsync(StartDate, EndDate);
+                return RedirectToPage(); // Redireciona para atualizar a página
+            }
+
+            // Caso a edição não tenha sido bem-sucedida, exibe uma mensagem de erro
+            ModelState.AddModelError(string.Empty, "Não foi possível editar a conta.");
+            return Page();
+        }
     }
 }

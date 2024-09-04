@@ -108,7 +108,12 @@
                             <td class="text-center">
                                 @if (!conta.Pago)
                                 {
-                                    <a asp-page="./Edit" asp-route-id="@conta.Id" class="btn btn-warning btn-sm" title="Editar">
+                                    <a href="#" class="btn btn-warning btn-sm" title="Editar"
+                                       data-toggle="modal" data-target="#editAccountModal"
+                                       data-id="@conta.Id"
+                                       data-name="@conta.Nome"
+                                       data-value="@conta.Valor.ToString("F2")"
+                                       data-duedate="@conta.DataVencimento.ToString("yyyy-MM-dd")">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <a href="#" class="btn btn-danger btn-sm ml-2" title="Excluir"
@@ -117,9 +122,14 @@
                                        data-id="@conta.Id" data-name="@conta.Nome">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
-                                    <button type="button" class="btn btn-primary btn-sm ml-2" title="Pagamento" data-toggle="modal" data-target="#payModal" data-id="@conta.Id" data-name="@conta.Nome">
-                                        <i class="fas fa-check"></i>
-                                    </button>
+                                    <a href="#" class="btn btn-primary btn-sm ml-2" title="Pagamento"
+                                       data-toggle="modal" data-target="#editAccountModal"
+                                       data-id="@conta.Id"
+                                       data-name="@conta.Nome"
+                                       data-value="@conta.Valor.ToString("F2")"
+                                       data-duedate="@conta.DataVencimento.ToString("yyyy-MM-dd")">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
                                 }
                                 else
                                 {
@@ -136,35 +146,6 @@
                     }
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de Confirmação de Pagamento -->
-<div class="modal fade" id="payModal" tabindex="-1" role="dialog" aria-labelledby="payModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="payModalLabel">Confirmar Pagamento</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Você deseja marcar a conta <strong id="modalAccountName"></strong> como paga?</p>
-                <div class="form-group">
-                    <label for="paymentDate">Escolha a Data de Pagamento:</label>
-                    <select id="paymentDate" class="form-control">
-                        <option value="today" data-date="@DateTime.Now.ToString("yyyy-MM-dd")">Data Corrente (@DateTime.Now.ToString("dd/MM/yyyy"))</option>
-                        <option value="custom">Data Personalizada</option>
-                    </select>
-                    <input type="date" id="customDate" class="form-control mt-2" style="display: none;" />
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" id="confirmPayBtn" class="btn btn-primary">Confirmar</button>
-            </div>
         </div>
     </div>
 </div>
@@ -230,6 +211,44 @@
     </div>
 </div>
 
+<!-- Modal de Edição de Conta -->
+<div class="modal fade" id="editAccountModal" tabindex="-1" role="dialog" aria-labelledby="editAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAccountModalLabel">Editar Conta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editAccountForm" method="post" asp-page-handler="Edit">
+                    <input type="hidden" id="editAccountId" name="Conta.Id" />
+                    <div class="form-group">
+                        <label for="editNome">Nome</label>
+                        <input type="text" id="editNome" name="Conta.Nome" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editValor">Valor</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="text" id="editValor" name="Conta.Valor" class="form-control" required
+                                   pattern="^\d+([.,]\d{1,2})?$" title="Número com até duas casas decimais" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDataVencimento">Data de Vencimento</label>
+                        <input type="date" id="editDataVencimento" name="Conta.DataVencimento" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Rodapé -->
 <footer class="bg-dark text-white mt-4 py-2">
     <div class="container text-center">
@@ -241,15 +260,14 @@
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- Adicionando Bootstrap e FontAwesome -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 
-    <!-- Adicionando o JavaScript do Bootstrap e Popper.js -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Inclua o Popper.js e o Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Adicione o Bootstrap e o FontAwesome -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 
     <!-- Opção para deletar conta -->
     <script>
@@ -270,14 +288,39 @@
         });
     </script>
 
-    <!-- Preenche Data de Vencimento com data corrente - Form Nova Conta -->
     <script>
+        // Preenche Data de Vencimento com data corrente - Form Nova Conta
         // Adiciona um listener para o evento de abertura do modal
         $('#createAccountModal').on('shown.bs.modal', function () {
+            // Define o foco no campo "Nome"
+            $('#Nome').focus();
+
             // Obtem a data atual
             const today = new Date().toISOString().split('T')[0];
-            // Define o valor do campo como a data atual
+            // Define o valor do campo "Data de Vencimento" como a data atual
             document.getElementById('DataVencimento').value = today;
+        });
+    </script>
+
+    <script>
+        // Preencher Form Editar com os dados da conta quando o modal é aberto
+        $('#editAccountModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botão que abriu o modal
+            var accountId = button.data('id'); // Extraindo dados do atributo
+            var accountName = button.data('name');
+            var accountValue = button.data('value');
+            var accountDueDate = button.data('duedate');
+
+            var modal = $(this);
+            modal.find('#editAccountId').val(accountId);
+            modal.find('#editNome').val(accountName);
+            modal.find('#editValor').val(accountValue);
+            modal.find('#editDataVencimento').val(accountDueDate);
+
+            // Define o foco no campo "Nome"
+            setTimeout(function () {
+                $('#editNome').focus();
+            }, 500);
         });
     </script>
 
@@ -368,55 +411,6 @@
         $('#createAccountModal').on('hidden.bs.modal', function () {
             // Limpa os campos do formulário
             $('#createAccountForm')[0].reset();
-        });
-    </script>
-
-    <script>
-        // Mostrar o modal com dados da conta
-        $('#payModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Botão que abriu o modal
-            var accountName = button.data('name'); // Extrair informações do botão
-            var accountId = button.data('id');
-            var accountValue = button.data('value');
-            var accountDueDate = button.data('duedate');
-
-            var modal = $(this);
-            modal.find('#modalAccountName').text(accountName);
-            modal.find('#confirmPayBtn').data('id', accountId);
-            modal.find('#confirmPayBtn').data('value', accountValue);
-            modal.find('#confirmPayBtn').data('duedate', accountDueDate);
-        });
-
-        // Alternar visibilidade da data personalizada
-        $('#paymentDate').on('change', function () {
-            if ($(this).val() === 'custom') {
-                $('#customDate').show();
-            } else {
-                $('#customDate').hide();
-            }
-        });
-
-        // Confirmar pagamento
-        $('#confirmPayBtn').on('click', function () {
-            var paymentDate = $('#paymentDate').val() === 'custom' ? $('#customDate').val() : $('#paymentDate').find('option:selected').data('date');
-            var accountId = $(this).data('id');
-            var accountValue = $(this).data('value');
-            var accountDueDate = $(this).data('duedate');
-
-            if (!paymentDate) {
-                alert('Por favor, selecione uma data de pagamento.');
-                return;
-            }
-
-            // Enviar requisição POST para atualizar a conta
-            $.post('/Index?handler=UpdatePayment', {
-                id: accountId,
-                paymentDate: paymentDate
-            }).done(function () {
-                location.reload(); // Recarregar a página após atualização
-            }).fail(function () {
-                alert('Erro ao atualizar a conta.');
-            });
         });
     </script>
 }

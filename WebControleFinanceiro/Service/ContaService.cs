@@ -50,5 +50,33 @@ namespace WebAppControleFinanceiro.Services
             var response = await _httpClient.PostAsJsonAsync("http://localhost:5235/api/Conta", novaConta);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> EditContaAsync(Conta updatedConta)
+        {
+            try
+            {
+                updatedConta.DataVencimento = updatedConta.DataVencimento.ToUniversalTime();
+
+                if (updatedConta.DataPagamento != null)
+                {
+                    updatedConta.Pago = true;
+                }
+
+                var response = await _httpClient.PostAsJsonAsync("http://localhost:5235/api/Conta/edit", updatedConta);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Erro: {response.StatusCode}, Mensagem: {content}");
+                }
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exceção: {ex.Message}");
+                return false;
+            }
+        }
     }
 }
