@@ -6,4 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Pages\Scripts\**" />
+    <Content Remove="Pages\Scripts\**" />
+    <EmbeddedResource Remove="Pages\Scripts\**" />
+    <None Remove="Pages\Scripts\**" />
+  </ItemGroup>
+
 </Project>

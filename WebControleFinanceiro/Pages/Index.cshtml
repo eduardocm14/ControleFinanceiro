@@ -56,7 +56,6 @@
     </div>
 </div>
 
-
 <!-- Tabela de Listagem -->
 <div class="card">
     <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
@@ -309,140 +308,34 @@
 </footer>
 
 @section Scripts {
+    <!-- Inclua o jQuery, Popper.js e o Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Inclua o Popper.js e o Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Adicione o Bootstrap e o FontAwesome -->
+    <!-- Inclua o Bootstrap e o FontAwesome -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 
     <script>
-        // Preencher Form Pagamento com dados ao Abrir Modal
         $(document).ready(function () {
-            $('#paymentModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget); // Botão que disparou o modal
-                var id = button.data('id');
-                var name = button.data('name');
-                var value = button.data('value');
-                var dueDate = button.data('duedate');
-
-                // Selecionar os campos do modal
-                var modal = $(this);
-                modal.find('#paymentAccountId').val(id);
-                modal.find('#paymentNome').val(name);
-                modal.find('#paymentValor').val(value);
-                modal.find('#paymentDataVencimento').val(dueDate);
-
-                // Definir a data atual no campo de Data de Pagamento
-                var today = new Date().toISOString().split('T')[0];
-                modal.find('#paymentDataPagamento').val(today);
-
-                // Define o foco no campo "Nome"
-                setTimeout(function () {
-                    $('#paymentDataPagamento').focus();
-                }, 500);
-            });
-        });
-
-    </script>
-
-    <!-- Opção para deletar conta -->
-    <script>
-        $('#deleteModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Botão que abriu o modal
-            var accountId = button.data('id'); // Extraindo dados do atributo
-            var accountName = button.data('name');
-            var accountCode = button.data('code');
-
-            var modal = $(this);
-            modal.find('#modalAccountName').text(accountName);
-            modal.find('#modalAccountCode').text(accountCode);
-            modal.find('#deleteAccountId').val(accountId);
-
-            // Defina a ação do formulário com o URL apropriado
-            var form = modal.find('#deleteForm');
-            form.attr('action', '@Url.Page("Index", "Delete")'); // Ajuste conforme a URL da ação
-        });
-    </script>
-
-    <script>
-        // Preencher Form Editar com os dados da conta quando o modal é aberto
-        $('#editAccountModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Botão que abriu o modal
-            var accountId = button.data('id'); // Extraindo dados do atributo
-            var accountName = button.data('name');
-            var accountValue = button.data('value');
-            var accountDueDate = button.data('duedate');
-
-            var modal = $(this);
-            modal.find('#editAccountId').val(accountId);
-            modal.find('#editNome').val(accountName);
-            modal.find('#editValor').val(accountValue);
-            modal.find('#editDataVencimento').val(accountDueDate);
-
-            // Define o foco no campo "Nome"
-            setTimeout(function () {
-                $('#editNome').focus();
-            }, 500);
-        });
-    </script>
-
-    <script>
-        // Form Nova Conta - Preenche Data de Vencimento com data corrente
-        $('#createAccountModal').on('shown.bs.modal', function () {
-            // Define o foco no campo "Nome"
-            $('#Nome').focus();
-
-            // Obtem a data atual
-            const today = new Date().toISOString().split('T')[0];
-            // Define o valor do campo "Data de Vencimento" como a data atual
-            document.getElementById('DataVencimento').value = today;
-        });
-    </script>
-
-    <!-- Limpar Form Nova Conta ao fechar -->
-    <script>
-        // Quando o modal for fechado
-        $('#createAccountModal').on('hidden.bs.modal', function () {
-            // Limpa os campos do formulário
-            $('#createAccountForm')[0].reset();
-        });
-    </script>
-
-    <!-- Funcionalidade onde a seleção de uma das opções de filtro desabilita os campos de data e aplica automaticamente o filtro com base na seleção-->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Seleciona o botão e o formulário de filtro
+            // Funcionalidade de filtro
             var toggleButton = document.getElementById('toggleFilterBtn');
             var filterForm = document.getElementById('filterForm');
             var dateFilter = document.getElementById('dateFilter');
             var startDate = document.getElementById('startDate');
             var endDate = document.getElementById('endDate');
 
-            // Obtém a data corrente
+            // Configura os campos de data
             const today = new Date().toISOString().split('T')[0];
+            startDate.value = today;
+            endDate.value = today;
 
-            // Define os valores padrão dos campos de data
-            document.getElementById('startDate').value = today;
-            document.getElementById('endDate').value = today;
-
-            // Adiciona um ouvinte de evento de clique ao botão
             toggleButton.addEventListener('click', function () {
-                if (filterForm.style.display === 'none' || filterForm.style.display === '') {
-                    // Mostra o formulário de filtro
-                    filterForm.style.display = 'block';
-                    toggleButton.innerHTML = '<i class="fas fa-filter"></i> Ocultar Filtros';
-                } else {
-                    // Oculta o formulário de filtro
-                    filterForm.style.display = 'none';
-                    toggleButton.innerHTML = '<i class="fas fa-filter"></i> Mostrar Filtros';
-                }
+                filterForm.style.display = (filterForm.style.display === 'none' || filterForm.style.display === '') ? 'block' : 'none';
+                toggleButton.innerHTML = (filterForm.style.display === 'block') ? '<i class="fas fa-filter"></i> Ocultar Filtros' : '<i class="fas fa-filter"></i> Mostrar Filtros';
             });
 
-            // Adiciona um ouvinte de evento de mudança ao filtro de datas
             dateFilter.addEventListener('change', function () {
                 var selectedValue = dateFilter.value;
                 var today = new Date();
@@ -452,38 +345,31 @@
                 switch (selectedValue) {
                     case 'Last7Days':
                         start.setDate(today.getDate() - 7);
-                        end = today;
                         break;
                     case 'Last15Days':
                         start.setDate(today.getDate() - 15);
-                        end = today;
                         break;
                     case 'Last20Days':
                         start.setDate(today.getDate() - 20);
-                        end = today;
                         break;
                     case 'ThisMonth':
                         start.setDate(1);
                         end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
                         break;
                     default:
-                        start = '';
-                        end = '';
+                        start = end = null;
                         break;
                 }
 
                 if (start && end) {
                     startDate.value = formatDate(start);
                     endDate.value = formatDate(end);
-                    startDate.disabled = true;
-                    endDate.disabled = true;
+                    startDate.disabled = endDate.disabled = true;
                 } else {
-                    startDate.disabled = false;
-                    endDate.disabled = false;
+                    startDate.disabled = endDate.disabled = false;
                 }
             });
 
-            // Função para formatar a data no formato yyyy-MM-dd
             function formatDate(date) {
                 var year = date.getFullYear();
                 var month = String(date.getMonth() + 1).padStart(2, '0');
@@ -492,4 +378,7 @@
             }
         });
     </script>
+
+    <!-- Inclua o arquivo JS externo -->
+    <script src="~/js/site.js"></script>
 }
