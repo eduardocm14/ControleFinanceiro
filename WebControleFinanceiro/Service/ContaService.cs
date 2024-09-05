@@ -55,13 +55,6 @@ namespace WebAppControleFinanceiro.Services
         {
             try
             {
-                updatedConta.DataVencimento = updatedConta.DataVencimento.ToUniversalTime();
-
-                if (updatedConta.DataPagamento != null)
-                {
-                    updatedConta.Pago = true;
-                }
-
                 var response = await _httpClient.PostAsJsonAsync("http://localhost:5235/api/Conta/edit", updatedConta);
 
                 if (!response.IsSuccessStatusCode)

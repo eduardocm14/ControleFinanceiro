@@ -90,8 +90,8 @@ namespace WebAppControleFinanceiro.Pages
         {
             DateTime StartDate = new(DateTime.Now.Year, DateTime.Now.Month, 1);
             DateTime EndDate = new(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
-            // Defina Pago como false
-            Conta.Pago = false;
+            //// Defina Pago como false
+            //Conta.Pago = false;
 
             if (!ModelState.IsValid)
             {

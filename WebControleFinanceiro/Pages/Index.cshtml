@@ -68,7 +68,11 @@
             <span class="ml-3">Valor Total: @Model.Contas.Sum(c => c.Valor).ToString("C")</span>
             <span class="ml-3">Valor Total Pago: @Model.Contas.Where(c => c.Pago).Sum(c => c.Valor).ToString("C")</span>
         </div>
-        <button type="button" class="btn btn-primary" title="Incluir Conta" data-toggle="modal" data-target="#createAccountModal">
+        <!-- Botão Nova Conta -->
+        <button type="button" class="btn btn-primary"
+                title="Incluir Nova Conta"
+                data-toggle="modal"
+                data-target="#createAccountModal">
             <i class="fas fa-plus-circle"></i>
         </button>
     </div>
@@ -122,13 +126,13 @@
                                        data-id="@conta.Id" data-name="@conta.Nome">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
-                                    <a href="#" class="btn btn-primary btn-sm ml-2" title="Pagamento"
-                                       data-toggle="modal" data-target="#editAccountModal"
+                                    <a href="#" class="btn btn-primary btn-sm ml-2" title="Pagar"
+                                       data-toggle="modal" data-target="#paymentModal"
                                        data-id="@conta.Id"
                                        data-name="@conta.Nome"
                                        data-value="@conta.Valor.ToString("F2")"
                                        data-duedate="@conta.DataVencimento.ToString("yyyy-MM-dd")">
-                                        <i class="fas fa-edit"></i>
+                                        <i class="fas fa-money-bill-wave"></i>
                                     </a>
                                 }
                                 else
@@ -249,6 +253,52 @@
     </div>
 </div>
 
+<!-- Modal Pagamento de Conta -->
+<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Pagamento de Conta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="paymentForm" method="post" asp-page-handler="Edit">
+                    <input type="hidden" id="paymentAccountId" name="Conta.Id" />
+
+                    <div class="form-group">
+                        <label for="paymentNome">Nome</label>
+                        <input type="text" id="paymentNome" name="Conta.Nome" class="form-control" readonly />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paymentValor">Valor</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="text" id="paymentValor" name="Conta.Valor" class="form-control" readonly />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paymentDataVencimento">Data de Vencimento</label>
+                        <input type="date" id="paymentDataVencimento" name="Conta.DataVencimento" class="form-control" readonly />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paymentDataPagamento">Data de Pagamento</label>
+                        <input type="date" id="paymentDataPagamento" name="Conta.DataPagamento" class="form-control" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">Confirmar Pagamento</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Rodapé -->
 <footer class="bg-dark text-white mt-4 py-2">
     <div class="container text-center">
@@ -269,6 +319,36 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 
+    <script>
+        // Preencher Form Pagamento com dados ao Abrir Modal
+        $(document).ready(function () {
+            $('#paymentModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Botão que disparou o modal
+                var id = button.data('id');
+                var name = button.data('name');
+                var value = button.data('value');
+                var dueDate = button.data('duedate');
+
+                // Selecionar os campos do modal
+                var modal = $(this);
+                modal.find('#paymentAccountId').val(id);
+                modal.find('#paymentNome').val(name);
+                modal.find('#paymentValor').val(value);
+                modal.find('#paymentDataVencimento').val(dueDate);
+
+                // Definir a data atual no campo de Data de Pagamento
+                var today = new Date().toISOString().split('T')[0];
+                modal.find('#paymentDataPagamento').val(today);
+
+                // Define o foco no campo "Nome"
+                setTimeout(function () {
+                    $('#paymentDataPagamento').focus();
+                }, 500);
+            });
+        });
+
+    </script>
+
     <!-- Opção para deletar conta -->
     <script>
         $('#deleteModal').on('show.bs.modal', function (event) {
@@ -285,20 +365,6 @@
             // Defina a ação do formulário com o URL apropriado
             var form = modal.find('#deleteForm');
             form.attr('action', '@Url.Page("Index", "Delete")'); // Ajuste conforme a URL da ação
-        });
-    </script>
-
-    <script>
-        // Preenche Data de Vencimento com data corrente - Form Nova Conta
-        // Adiciona um listener para o evento de abertura do modal
-        $('#createAccountModal').on('shown.bs.modal', function () {
-            // Define o foco no campo "Nome"
-            $('#Nome').focus();
-
-            // Obtem a data atual
-            const today = new Date().toISOString().split('T')[0];
-            // Define o valor do campo "Data de Vencimento" como a data atual
-            document.getElementById('DataVencimento').value = today;
         });
     </script>
 
@@ -321,6 +387,28 @@
             setTimeout(function () {
                 $('#editNome').focus();
             }, 500);
+        });
+    </script>
+
+    <script>
+        // Form Nova Conta - Preenche Data de Vencimento com data corrente
+        $('#createAccountModal').on('shown.bs.modal', function () {
+            // Define o foco no campo "Nome"
+            $('#Nome').focus();
+
+            // Obtem a data atual
+            const today = new Date().toISOString().split('T')[0];
+            // Define o valor do campo "Data de Vencimento" como a data atual
+            document.getElementById('DataVencimento').value = today;
+        });
+    </script>
+
+    <!-- Limpar Form Nova Conta ao fechar -->
+    <script>
+        // Quando o modal for fechado
+        $('#createAccountModal').on('hidden.bs.modal', function () {
+            // Limpa os campos do formulário
+            $('#createAccountForm')[0].reset();
         });
     </script>
 
@@ -402,15 +490,6 @@
                 var day = String(date.getDate()).padStart(2, '0');
                 return `${year}-${month}-${day}`;
             }
-        });
-    </script>
-
-    <!-- Limpar Form Nova Conta ao fechar -->
-    <script>
-        // Quando o modal for fechado
-        $('#createAccountModal').on('hidden.bs.modal', function () {
-            // Limpa os campos do formulário
-            $('#createAccountForm')[0].reset();
         });
     </script>
 }

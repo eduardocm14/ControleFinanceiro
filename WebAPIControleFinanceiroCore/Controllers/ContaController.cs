@@ -62,6 +62,7 @@ namespace WebAPIControleFinanceiroCore.Controllers
             }
 
             var existingConta = await _context.Contas.FindAsync(conta.Id);
+
             if (existingConta == null)
             {
                 return NotFound();
@@ -71,6 +72,8 @@ namespace WebAPIControleFinanceiroCore.Controllers
             existingConta.Nome = conta.Nome;
             existingConta.Valor = conta.Valor;
             existingConta.DataVencimento = conta.DataVencimento.ToUniversalTime(); // Converta para UTC
+            existingConta.DataPagamento = conta.DataPagamento?.ToUniversalTime(); // Converta para UTC
+            existingConta.Pago = conta.DataPagamento.HasValue ? true : existingConta.Pago;
 
             _context.Entry(existingConta).State = EntityState.Modified;
 
