@@ -1,0 +1,167 @@
+﻿@* Pages/Shared/_Modals.cshtml *@
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Deseja excluir a conta <strong id="modalAccountName"></strong>? Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="post" asp-page-handler="Delete">
+                    <input type="hidden" id="deleteAccountId" name="id" />
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Criação de Conta -->
+<div class="modal fade" id="createAccountModal" tabindex="-1" role="dialog" aria-labelledby="createAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createAccountModalLabel">Nova Conta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createAccountForm" method="post" asp-page-handler="Add">
+                    <div class="form-group">
+                        <label for="Nome">Nome</label>
+                        <input type="text" id="Nome" name="Conta.Nome" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="valor">Valor</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="text" id="valor" name="Conta.Valor" class="form-control" required
+                                   pattern="^\d+([.,]\d{1,2})?$" title="Número com até duas casas decimais" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="DataVencimento">Data de Vencimento</label>
+                        <input type="date" id="DataVencimento" name="Conta.DataVencimento" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Adicionar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Edição de Conta -->
+<div class="modal fade" id="editAccountModal" tabindex="-1" role="dialog" aria-labelledby="editAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAccountModalLabel">Editar Conta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editAccountForm" method="post" asp-page-handler="Edit">
+                    <input type="hidden" id="editAccountId" name="Conta.Id" />
+                    <div class="form-group">
+                        <label for="editNome">Nome</label>
+                        <input type="text" id="editNome" name="Conta.Nome" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editValor">Valor</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="text" id="editValor" name="Conta.Valor" class="form-control" required
+                                   pattern="^\d+([.,]\d{1,2})?$" title="Número com até duas casas decimais" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDataVencimento">Data de Vencimento</label>
+                        <input type="date" id="editDataVencimento" name="Conta.DataVencimento" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Pagamento de Conta -->
+<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Pagamento de Conta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="paymentForm" method="post" asp-page-handler="Edit">
+                    <input type="hidden" id="paymentAccountId" name="Conta.Id" />
+
+                    <div class="form-group">
+                        <label for="paymentNome">Nome</label>
+                        <input type="text" id="paymentNome" name="Conta.Nome" class="form-control" readonly />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paymentValor">Valor</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="text" id="paymentValor" name="Conta.Valor" class="form-control" readonly />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paymentDataVencimento">Data de Vencimento</label>
+                        <input type="date" id="paymentDataVencimento" name="Conta.DataVencimento" class="form-control" readonly />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paymentDataPagamento">Data de Pagamento</label>
+                        <input type="date" id="paymentDataPagamento" name="Conta.DataPagamento" class="form-control" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">Confirmar Pagamento</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Funcionalidade Não Implementada -->
+<div class="modal fade" id="notImplementedModal" tabindex="-1" role="dialog" aria-labelledby="notImplementedModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notImplementedModalLabel">Atenção</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Esta funcionalidade não está disponível. Estamos trabalhando nisso, fique atento às próximas atualizações!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -4,17 +4,30 @@
     ViewData["Title"] = "";
 }
 
-<h5>Controle Financeiro</h5>
+<!-- Menu de Navegação -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-info mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="#">Controle Financeiro</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+               <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#createAccountModal" title="Incluir Nova Conta">Conta</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#notImplementedModal">Contrato de Aluguel</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
 <div class="card mb-4">
-    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-        <div>
-            <i class="fas fa-filter"></i> Filtro de Contas
-        </div>
-        <button class="btn btn-light" type="button" id="toggleFilterBtn">
-            <i class="fas fa-filter"></i> Mostrar Filtros
-        </button>
-    </div>
     <div class="card-body" id="filterForm" style="display: none;">
         <!-- Formulário de Filtro -->
         <form method="get" action="@Url.Page("Index")" class="p-3">
@@ -68,11 +81,15 @@
             <span class="ml-3">Valor Total Pago: @Model.Contas.Where(c => c.Pago).Sum(c => c.Valor).ToString("C")</span>
         </div>
         <!-- Botão Nova Conta -->
-        <button type="button" class="btn btn-primary"
+        @* <button type="button" class="btn btn-primary"
                 title="Incluir Nova Conta"
                 data-toggle="modal"
                 data-target="#createAccountModal">
             <i class="fas fa-plus-circle"></i>
+        </button> *@
+        <!-- Filtro de Contas -->
+         <button class="btn btn-light" type="button" id="toggleFilterBtn">
+            <i class="fas fa-filter"></i> Mostrar Filtros
         </button>
     </div>
     <div class="card-body p-0">
@@ -153,150 +170,8 @@
     </div>
 </div>
 
-<!-- Modal de Confirmação de Exclusão -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Deseja excluir a conta <strong id="modalAccountName"></strong>? Esta ação não pode ser desfeita.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <form id="deleteForm" method="post">
-                    <input type="hidden" id="deleteAccountId" name="id" />
-                    <button type="submit" class="btn btn-danger">Excluir</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de Criação de Conta -->
-<div class="modal fade" id="createAccountModal" tabindex="-1" role="dialog" aria-labelledby="createAccountModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createAccountModalLabel">Nova Conta</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="createAccountForm" method="post" asp-page-handler="Add">
-                    <div class="form-group">
-                        <label for="Nome">Nome</label>
-                        <input type="text" id="Nome" name="Conta.Nome" class="form-control" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="valor">Valor</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">R$</span>
-                            </div>
-                            <input type="text" id="valor" name="Conta.Valor" class="form-control" required
-                                   pattern="^\d+([.,]\d{1,2})?$" title="Número com até duas casas decimais" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="DataVencimento">Data de Vencimento</label>
-                        <input type="date" id="DataVencimento" name="Conta.DataVencimento" class="form-control" required />
-                    </div>
-                    <button type="submit" class="btn btn-success w-100">Adicionar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de Edição de Conta -->
-<div class="modal fade" id="editAccountModal" tabindex="-1" role="dialog" aria-labelledby="editAccountModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editAccountModalLabel">Editar Conta</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editAccountForm" method="post" asp-page-handler="Edit">
-                    <input type="hidden" id="editAccountId" name="Conta.Id" />
-                    <div class="form-group">
-                        <label for="editNome">Nome</label>
-                        <input type="text" id="editNome" name="Conta.Nome" class="form-control" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="editValor">Valor</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">R$</span>
-                            </div>
-                            <input type="text" id="editValor" name="Conta.Valor" class="form-control" required
-                                   pattern="^\d+([.,]\d{1,2})?$" title="Número com até duas casas decimais" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="editDataVencimento">Data de Vencimento</label>
-                        <input type="date" id="editDataVencimento" name="Conta.DataVencimento" class="form-control" required />
-                    </div>
-                    <button type="submit" class="btn btn-success w-100">Salvar Alterações</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Pagamento de Conta -->
-<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="paymentModalLabel">Pagamento de Conta</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="paymentForm" method="post" asp-page-handler="Edit">
-                    <input type="hidden" id="paymentAccountId" name="Conta.Id" />
-
-                    <div class="form-group">
-                        <label for="paymentNome">Nome</label>
-                        <input type="text" id="paymentNome" name="Conta.Nome" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="paymentValor">Valor</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">R$</span>
-                            </div>
-                            <input type="text" id="paymentValor" name="Conta.Valor" class="form-control" readonly />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="paymentDataVencimento">Data de Vencimento</label>
-                        <input type="date" id="paymentDataVencimento" name="Conta.DataVencimento" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="paymentDataPagamento">Data de Pagamento</label>
-                        <input type="date" id="paymentDataPagamento" name="Conta.DataPagamento" class="form-control" required />
-                    </div>
-
-                    <button type="submit" class="btn btn-success w-100">Confirmar Pagamento</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Inclua os modais aqui -->
+<partial name="_Modals" />
 
 <!-- Rodapé -->
 <footer class="bg-dark text-white mt-4 py-2">
