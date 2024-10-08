@@ -17,14 +17,18 @@
 
     // Opção para deletar conta
     $('#deleteModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
+        var button = $(event.relatedTarget); // Botão que abriu o modal
+        var accountId = button.data('id'); // Extraindo dados do atributo data-id
+        var accountName = button.data('name'); // Extraindo dados do atributo data-name
+        var actionUrl = button.data('url'); // Obtendo a URL do botão
         var modal = $(this);
-        modal.find('#modalAccountName').text(button.data('name'));
-        modal.find('#modalAccountCode').text(button.data('code'));
-        modal.find('#deleteAccountId').val(button.data('id'));
 
+        modal.find('#modalAccountName').text(accountName);
+        modal.find('#deleteAccountId').val(accountId); // Definindo o ID no campo oculto
+
+        // Definindo a ação do formulário com a URL correta
         var form = modal.find('#deleteForm');
-        form.attr('action', '@Url.Page("Index", "Delete")');
+        form.attr('action', actionUrl); // Atribuindo a URL ao formulário
     });
 
     // Preencher Form Editar com dados da conta

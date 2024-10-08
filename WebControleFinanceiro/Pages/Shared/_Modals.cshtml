@@ -11,12 +11,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Deseja excluir a conta <strong id="modalAccountName"></strong>? Esta ação não pode ser desfeita.</p>
+                Tem certeza de que deseja excluir a conta <strong id="modalAccountName"></strong>?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <form id="deleteForm" method="post" asp-page-handler="Delete">
-                    <input type="hidden" id="deleteAccountId" name="id" />
+                <form id="deleteForm" method="post">
+                    <input type="hidden" id="deleteAccountId" name="id" value="">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-danger">Excluir</button>
                 </form>
             </div>

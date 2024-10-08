@@ -138,7 +138,7 @@
                                     </a>
                                     <a href="#" class="btn btn-danger btn-sm ml-2" title="Excluir"
                                        data-toggle="modal" data-target="#deleteModal"
-                                       data-url="@Url.Page("Delete", new { id = conta.Id })"
+                                       data-url="@Url.Page("Index", "Delete", new { id = conta.Id })"
                                        data-id="@conta.Id" data-name="@conta.Nome">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
