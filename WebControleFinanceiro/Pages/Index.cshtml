@@ -153,7 +153,14 @@
                                 }
                                 else
                                 {
-                                    <i class="fas fa-lock" title="Conta Paga não pode ser alterada"></i>
+                                    <a href="#" class="btn btn-info btn-sm ml-2" title="Reabrir Conta"
+                                       data-toggle="modal" data-target="#reopenAccountModal"
+                                       data-id="@conta.Id"
+                                       data-name="@conta.Nome"
+                                       data-value="@conta.Valor.ToString("F2")"
+                                       data-duedate="@conta.DataVencimento.ToString("yyyy-MM-dd")">
+                                        <i class="fas fa-lock"></i>
+                                    </a>
                                 }
                             </td>
                         </tr>

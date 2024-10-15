@@ -53,4 +53,23 @@
     $('#createAccountModal').on('hidden.bs.modal', function () {
         $('#createAccountForm')[0].reset();
     });
+
+   $('#reopenAccountModal').on('shown.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Botão que acionou o modal
+        var accountId = button.data('id'); // Extrai info do data-* atributos
+        var accountName = button.data('name');
+        var accountValue = button.data('value');
+        var dueDate = button.data('duedate');
+
+        // Atualiza os campos do modal
+        var modal = $(this);
+        modal.find('#reopenAccountId').val(accountId);
+        modal.find('#reopenAccountName').val(accountName);
+        modal.find('#reopenAccountValue').val(accountValue);
+        modal.find('#reopenAccountDuedate').val(dueDate);
+
+        // Limpa o  campo de senha e coloca foco nele
+        modal.find('#reopenAccountPassword').val('').focus();
+    });
+
 });

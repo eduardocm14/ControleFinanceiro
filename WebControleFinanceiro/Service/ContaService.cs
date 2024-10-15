@@ -71,5 +71,12 @@ namespace WebAppControleFinanceiro.Services
                 return false;
             }
         }
+
+        public async Task<bool> ValidatePasswordAsync(string password)
+        {
+            // Exemplo de validação simples de senha (em um cenário real, use hash e salt)
+            var validPassword = "senhaCorreta"; // Substitua pela lógica de senha real
+            return await Task.FromResult(password == validPassword);
+        }
     }
 }
