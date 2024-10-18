@@ -112,6 +112,41 @@ namespace WebAPIControleFinanceiroCore.Controllers
             return NoContent();
         }
 
+        [HttpPost("reopen/{id}")]
+        public async Task<IActionResult> ReopenConta(int id)
+        {
+            var conta = await _context.Contas.FindAsync(id);
+
+            if (conta == null)
+            {
+                return NotFound();
+            }
+
+            conta.DataVencimento = conta.DataVencimento.ToUniversalTime(); // Converta para UTC
+            conta.DataPagamento = null;
+            conta.Pago = false;
+
+            _context.Entry(conta).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ContaExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
         private bool ContaExists(int id)
         {
             return _context.Contas.Any(e => e.Id == id);
