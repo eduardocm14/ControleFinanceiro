@@ -112,12 +112,10 @@
             <div class="modal-body">
                 <form id="paymentForm" method="post" asp-page-handler="Edit">
                     <input type="hidden" id="paymentAccountId" name="Conta.Id" />
-
                     <div class="form-group">
                         <label for="paymentNome">Nome</label>
                         <input type="text" id="paymentNome" name="Conta.Nome" class="form-control" readonly />
                     </div>
-
                     <div class="form-group">
                         <label for="paymentValor">Valor</label>
                         <div class="input-group">
@@ -127,17 +125,14 @@
                             <input type="text" id="paymentValor" name="Conta.Valor" class="form-control" readonly />
                         </div>
                     </div>
-
                     <div class="form-group">
                         <label for="paymentDataVencimento">Data de Vencimento</label>
                         <input type="date" id="paymentDataVencimento" name="Conta.DataVencimento" class="form-control" readonly />
                     </div>
-
                     <div class="form-group">
                         <label for="paymentDataPagamento">Data de Pagamento</label>
                         <input type="date" id="paymentDataPagamento" name="Conta.DataPagamento" class="form-control" required />
                     </div>
-
                     <button type="submit" class="btn btn-success w-100">Confirmar Pagamento</button>
                 </form>
             </div>

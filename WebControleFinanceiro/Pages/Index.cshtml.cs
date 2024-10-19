@@ -30,7 +30,7 @@ namespace WebAppControleFinanceiro.Pages
         public string? DateFilter { get; set; }
 
         [BindProperty]
-        public string Senha { get; set; }
+        public string? Senha { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -120,6 +120,10 @@ namespace WebAppControleFinanceiro.Pages
         {
             if (!ModelState.IsValid)
             {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
                 // Retorna à página se o modelo estiver inválido
                 return Page();
             }
@@ -159,7 +163,6 @@ namespace WebAppControleFinanceiro.Pages
             return await LoadAccountListAndRedirectAsync("Não foi possível reabrir a conta.");
         }
 
-        // Método auxiliar para validar a senha
         private async Task<bool> ValidatePasswordAsync()
         {
             return await _contaService.ValidatePasswordAsync(Senha);
