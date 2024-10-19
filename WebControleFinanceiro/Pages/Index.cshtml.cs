@@ -29,8 +29,8 @@ namespace WebAppControleFinanceiro.Pages
         [BindProperty(SupportsGet = true)]
         public string? DateFilter { get; set; }
 
-        //[BindProperty(SupportsGet = true)]
-        //public string FilterType { get; set; }
+        [BindProperty]
+        public string Senha { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -137,6 +137,46 @@ namespace WebAppControleFinanceiro.Pages
             // Caso a edição não tenha sido bem-sucedida, exibe uma mensagem de erro
             ModelState.AddModelError(string.Empty, "Não foi possível editar a conta.");
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostReopenAsync(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page(); // Retorna à página se o modelo estiver inválido
+            }
+
+            if (!await ValidatePasswordAsync())
+            {
+                return await LoadAccountListAndRedirectAsync("Senha incorreta.");
+            }
+
+            if (await ReopenAccountAsync(id))
+            {
+                return RedirectToPage(); // Redireciona para atualizar a página
+            }
+
+            return await LoadAccountListAndRedirectAsync("Não foi possível reabrir a conta.");
+        }
+
+        // Método auxiliar para validar a senha
+        private async Task<bool> ValidatePasswordAsync()
+        {
+            return await _contaService.ValidatePasswordAsync(Senha);
+        }
+
+        // Método auxiliar para reabrir a conta
+        private async Task<bool> ReopenAccountAsync(int id)
+        {
+            return await _contaService.ReopenContaAsync(id);
+        }
+
+        // Método auxiliar para recarregar a lista de contas e redirecionar
+        private async Task<IActionResult> LoadAccountListAndRedirectAsync(string errorMessage)
+        {
+            ModelState.AddModelError(string.Empty, errorMessage);
+            Contas = await _contaService.GetContasAsync(StartDate, EndDate);
+            return RedirectToPage(); // Redireciona para atualizar a página
         }
     }
 }

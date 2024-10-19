@@ -54,7 +54,7 @@
         $('#createAccountForm')[0].reset();
     });
 
-   $('#reopenAccountModal').on('shown.bs.modal', function (event) {
+    $('#reopenAccountModal').on('shown.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Botão que acionou o modal
         var accountId = button.data('id'); // Extrai info do data-* atributos
         var accountName = button.data('name');
@@ -68,8 +68,7 @@
         modal.find('#reopenAccountValue').val(accountValue);
         modal.find('#reopenAccountDuedate').val(dueDate);
 
-        // Limpa o  campo de senha e coloca foco nele
+        // Limpa o campo de senha e coloca foco nele
         modal.find('#reopenAccountPassword').val('').focus();
     });
-
 });

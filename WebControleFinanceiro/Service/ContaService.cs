@@ -72,6 +72,29 @@ namespace WebAppControleFinanceiro.Services
             }
         }
 
+        public async Task<bool> ReopenContaAsync(int id)
+        {
+            try
+            {
+                // Envia uma solicitação POST para reabrir a conta
+                var response = await _httpClient.PostAsJsonAsync<object>($"http://localhost:5235/api/Conta/reopen/{id}", null);
+
+                // Verifica se a resposta foi bem-sucedida
+                if (!response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Erro: {response.StatusCode}, Mensagem: {content}");
+                }
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exceção: {ex.Message}");
+                return false;
+            }
+        }
+
         public async Task<bool> ValidatePasswordAsync(string password)
         {
             // Exemplo de validação simples de senha (em um cenário real, use hash e salt)
