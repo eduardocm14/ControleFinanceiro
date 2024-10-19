@@ -147,6 +147,47 @@ namespace WebAPIControleFinanceiroCore.Controllers
             return NoContent();
         }
 
+        [HttpPost("pay/{id}")]
+        public async Task<IActionResult> PayConta(int id, [FromBody] DateTime paymentDate)
+        {
+            // Buscando a conta pelo ID
+            var conta = await _context.Contas.FindAsync(id);
+
+            // Verificando se a conta existe
+            if (conta == null)
+            {
+                return NotFound(new { Message = "Conta não encontrada." });
+            }
+
+            conta.DataVencimento = conta.DataVencimento.ToUniversalTime(); // Converta para UTC
+            conta.DataPagamento = paymentDate.ToUniversalTime(); // Converta para UTC
+            conta.Pago = true; // Definindo o status como pago
+
+            // Informando ao EF que a conta foi modificada
+            _context.Entry(conta).State = EntityState.Modified;
+
+            try
+            {
+                // Salvando as alterações no banco de dados
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ContaExists(id))
+                {
+                    return NotFound(new { Message = "Conta não encontrada durante a atualização." });
+                }
+                else
+                {
+                    // Logue a exceção aqui se necessário
+                    return StatusCode(500, new { Message = "Erro interno ao tentar pagar a conta." });
+                }
+            }
+
+            // Retorna uma resposta sem conteúdo após uma operação bem-sucedida
+            return NoContent();
+        }
+
         private bool ContaExists(int id)
         {
             return _context.Contas.Any(e => e.Id == id);
