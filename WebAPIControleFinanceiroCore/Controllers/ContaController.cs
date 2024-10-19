@@ -20,14 +20,14 @@ namespace WebAPIControleFinanceiroCore.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Conta>> GetConta(int id)
         {
-            var product = await _context.Contas.FindAsync(id);
+            var conta = await _context.Contas.FindAsync(id);
 
-            if (product == null)
+            if (conta == null)
             {
                 return NotFound();
             }
 
-            return product;
+            return conta;
         }
 
         [HttpPost]
@@ -100,13 +100,13 @@ namespace WebAPIControleFinanceiroCore.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteConta(int id)
         {
-            var product = await _context.Contas.FindAsync(id);
-            if (product == null)
+            var conta = await _context.Contas.FindAsync(id);
+            if (conta == null)
             {
                 return NotFound();
             }
 
-            _context.Contas.Remove(product);
+            _context.Contas.Remove(conta);
             await _context.SaveChangesAsync();
 
             return NoContent();
