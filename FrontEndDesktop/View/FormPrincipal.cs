@@ -572,7 +572,7 @@ namespace WindowsFormFinanceiro
 
                         controlador.AdicionarConta(contaInclusao);
 
-                        MessageBox.Show("Contas criada no mês atual!", "Sucesso Tchê", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Contas criada no próximo mês!", "Sucesso Tchê", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     }
                 }
@@ -581,6 +581,33 @@ namespace WindowsFormFinanceiro
                     MessageBox.Show("Somente Contas Pagas podem ser copiadas para mês atual!", "Ti liga Tchê", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
+        }
+
+        private void gerarContaMêsAtualGridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewRegistros.Rows)
+            {
+                // Verifica se a célula "pago" tem valor 'true'
+                if (Convert.ToBoolean(row.Cells["pago"].Value))
+                {
+                    // Obtém os dados da linha atual do loop, não da linha selecionada
+                    var descricaoFornecedor = row.Cells["nome"].Value.ToString();
+                    var dataVencimento = Convert.ToDateTime(row.Cells["datavencimento"].Value);
+                    var valorPagar = Convert.ToDouble(row.Cells["valor"].Value);
+
+                    var contaInclusao = new Conta
+                    {
+                        Nome = descricaoFornecedor,
+                        Valor = Convert.ToDecimal(valorPagar), // converte corretamente para decimal
+                        DataVencimento = dataVencimento.Date.AddMonths(1), // adiciona um mês à data de vencimento
+                    };
+
+                    // Adiciona a conta
+                    controlador.AdicionarConta(contaInclusao);
+                }
+            }
+
+            MessageBox.Show("Contas criada próximo mês!", "Sucesso Tchê", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

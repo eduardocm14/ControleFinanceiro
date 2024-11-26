@@ -31,11 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPrincipal));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusLabelNome = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusLabelData = new System.Windows.Forms.ToolStripStatusLabel();
@@ -91,6 +91,7 @@
             this.pagarInformadoADataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.gerarContaMêsAtualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gerarContaMêsAtualGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.panelPesquisa.SuspendLayout();
             this.groupBoxPesquisa.SuspendLayout();
@@ -653,16 +654,16 @@
             this.dataGridViewRegistros.Name = "dataGridViewRegistros";
             this.dataGridViewRegistros.ReadOnly = true;
             this.dataGridViewRegistros.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewRegistros.RowHeadersDefaultCellStyle = dataGridViewCellStyle20;
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            this.dataGridViewRegistros.RowsDefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewRegistros.RowHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            this.dataGridViewRegistros.RowsDefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridViewRegistros.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewRegistros.Size = new System.Drawing.Size(882, 492);
             this.dataGridViewRegistros.TabIndex = 4;
@@ -686,8 +687,8 @@
             // valor
             // 
             this.valor.DataPropertyName = "valor";
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            this.valor.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            this.valor.DefaultCellStyle = dataGridViewCellStyle2;
             this.valor.HeaderText = "Valor";
             this.valor.Name = "valor";
             this.valor.ReadOnly = true;
@@ -695,9 +696,9 @@
             // dataVencimento
             // 
             this.dataVencimento.DataPropertyName = "datavencimento";
-            dataGridViewCellStyle15.Format = "d";
-            dataGridViewCellStyle15.NullValue = null;
-            this.dataVencimento.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle3.Format = "d";
+            dataGridViewCellStyle3.NullValue = null;
+            this.dataVencimento.DefaultCellStyle = dataGridViewCellStyle3;
             this.dataVencimento.HeaderText = "Data Vencimento";
             this.dataVencimento.Name = "dataVencimento";
             this.dataVencimento.ReadOnly = true;
@@ -706,8 +707,8 @@
             // dataPagamento
             // 
             this.dataPagamento.DataPropertyName = "datapagamento";
-            dataGridViewCellStyle19.Format = "d";
-            this.dataPagamento.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle4.Format = "d";
+            this.dataPagamento.DefaultCellStyle = dataGridViewCellStyle4;
             this.dataPagamento.HeaderText = "Data Pagamento";
             this.dataPagamento.Name = "dataPagamento";
             this.dataPagamento.ReadOnly = true;
@@ -728,36 +729,44 @@
             this.testeToolStripMenuItem,
             this.pagarInformadoADataToolStripMenuItem,
             this.toolStripMenuItem3,
-            this.gerarContaMêsAtualToolStripMenuItem});
+            this.gerarContaMêsAtualToolStripMenuItem,
+            this.gerarContaMêsAtualGridToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(225, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(277, 136);
             // 
             // testeToolStripMenuItem
             // 
             this.testeToolStripMenuItem.Name = "testeToolStripMenuItem";
-            this.testeToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.testeToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this.testeToolStripMenuItem.Text = "Pagar com data corrente";
             this.testeToolStripMenuItem.Click += new System.EventHandler(this.testeToolStripMenuItem_Click);
             // 
             // pagarInformadoADataToolStripMenuItem
             // 
             this.pagarInformadoADataToolStripMenuItem.Name = "pagarInformadoADataToolStripMenuItem";
-            this.pagarInformadoADataToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.pagarInformadoADataToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this.pagarInformadoADataToolStripMenuItem.Text = "Pagar informado a data";
             this.pagarInformadoADataToolStripMenuItem.Click += new System.EventHandler(this.pagarInformadoADataToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(224, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(276, 22);
             this.toolStripMenuItem3.Text = "------------------------------";
             // 
             // gerarContaMêsAtualToolStripMenuItem
             // 
             this.gerarContaMêsAtualToolStripMenuItem.Name = "gerarContaMêsAtualToolStripMenuItem";
-            this.gerarContaMêsAtualToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.gerarContaMêsAtualToolStripMenuItem.Text = "Gerar conta mês atual";
+            this.gerarContaMêsAtualToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.gerarContaMêsAtualToolStripMenuItem.Text = "Gerar conta próximo mês(Individual)";
             this.gerarContaMêsAtualToolStripMenuItem.Click += new System.EventHandler(this.gerarContaMêsAtualToolStripMenuItem_Click);
+            // 
+            // gerarContaMêsAtualGridToolStripMenuItem
+            // 
+            this.gerarContaMêsAtualGridToolStripMenuItem.Name = "gerarContaMêsAtualGridToolStripMenuItem";
+            this.gerarContaMêsAtualGridToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.gerarContaMêsAtualGridToolStripMenuItem.Text = "Gerar contas próximo mês(Todas Grid)";
+            this.gerarContaMêsAtualGridToolStripMenuItem.Click += new System.EventHandler(this.gerarContaMêsAtualGridToolStripMenuItem_Click);
             // 
             // FormPrincipal
             // 
@@ -857,6 +866,7 @@
         private System.Windows.Forms.ToolStripMenuItem backupBancoDeDadosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem gerarContaMêsAtualToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gerarContaMêsAtualGridToolStripMenuItem;
     }
 }
 

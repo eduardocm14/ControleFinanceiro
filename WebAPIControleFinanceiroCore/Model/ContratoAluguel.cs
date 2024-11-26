@@ -14,6 +14,6 @@
         public string? ContratoPath { get; set; }
 
         // Propriedade para upload de arquivo (pode ser uma imagem ou PDF)
-        public IFormFile? ContratoUpload { get; set; }
+        //public IFormFile? ContratoUpload { get; set; }
     }
 }

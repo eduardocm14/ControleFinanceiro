@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleFinanceiro", "ControleFinanceiro.csproj", "{CE5166D4-F129-49FA-B45A-EF1E5AA36867}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontEndDeskTop", "FrontEndDeskTop", "{81232716-F1F7-4115-99BF-79616F2ABFCB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontEndDesktop", "FrontEndDesktop", "{81232716-F1F7-4115-99BF-79616F2ABFCB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPIControleFinanceiroCore", "..\WebAPIControleFinanceiroCore\WebAPIControleFinanceiroCore.csproj", "{52F365A9-ED93-41F5-B335-3FF0B73AF99C}"
 EndProject
@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebControleFinanceiro", "..
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceRunAPI", "ServiceRunAPI", "{44E6E59D-BF3F-4382-8592-A57E96C72AD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppServiceRunAPI", "..\AppServiceRunAPI\AppServiceRunAPI.csproj", "{A4307058-A0A6-426A-96F7-BBE1724DE580}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppServiceRunAPI", "..\AppServiceRunAPI\AppServiceRunAPI.csproj", "{A4307058-A0A6-426A-96F7-BBE1724DE580}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
